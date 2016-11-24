@@ -4,4 +4,4 @@ include:
   - consul.install
   - consul.config
   - consul.service
-  - console.ui
+  - consul.ui
