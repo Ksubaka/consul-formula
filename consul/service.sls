@@ -22,6 +22,8 @@ consul-service:
   service.running:
     - name: consul
     - enable: True
+    - require:
+      - file: consul-init-file
     - watch:
       - file: consul-init-file
 
