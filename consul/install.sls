@@ -48,6 +48,13 @@ consul-download:
   cmd.run:
     - name: wget https://releases.hashicorp.com/consul/{{ consul.version }}/consul_{{ consul.version }}_linux_amd64.zip -O /tmp/consul_{{ consul.version }}_linux_amd64.zip
     - unless: test -f /usr/local/bin/consul-{{ consul.version }}
+
+consul-extract:
+  cmd.wait:
+    - name: unzip /tmp/consul_{{ consul.version }}_linux_amd64.zip -d /tmp
+    - watch:
+      - cmd: consul-download
+
 {% else %}
 consul-download:
   file.managed:
@@ -55,9 +62,13 @@ consul-download:
     - source: https://releases.hashicorp.com/consul/{{ consul.version }}/consul_{{ consul.version }}_linux_amd64.zip
     - source_hash: sha256={{ consul.hash }}
     - unless: test -f /usr/local/bin/consul-{{ consul.version }}
+
+consul-extract:
+  cmd.wait:
+    - name: unzip /tmp/consul_{{ consul.version }}_linux_amd64.zip -d /tmp
+    - watch:
+      - file: consul-download
 {% endif %}
-
-
 
 consul-extract:
   cmd.wait:
