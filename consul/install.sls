@@ -43,12 +43,21 @@ consul-data-dir:
     - makedirs:
 
 # Install agent
+{% if consul.download_method == 'wget' %}
+consul-download:
+  cmd.run:
+    - name: wget https://releases.hashicorp.com/consul/{{ consul.version }}/consul_{{ consul.version }}_linux_amd64.zip -O /tmp/consul_{{ consul.version }}_linux_amd64.zip
+    - unless: test -f /usr/local/bin/consul-{{ consul.version }}
+{% else %}
 consul-download:
   file.managed:
     - name: /tmp/consul_{{ consul.version }}_linux_amd64.zip
     - source: https://releases.hashicorp.com/consul/{{ consul.version }}/consul_{{ consul.version }}_linux_amd64.zip
     - source_hash: sha256={{ consul.hash }}
     - unless: test -f /usr/local/bin/consul-{{ consul.version }}
+{% endif %}
+
+
 
 consul-extract:
   cmd.wait:
