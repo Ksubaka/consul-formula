@@ -70,12 +70,6 @@ consul-extract:
       - file: consul-download
 {% endif %}
 
-consul-extract:
-  cmd.wait:
-    - name: unzip /tmp/consul_{{ consul.version }}_linux_amd64.zip -d /tmp
-    - watch:
-      - file: consul-download
-
 consul-install:
   file.rename:
     - name: /usr/local/bin/consul-{{ consul.version }}
